@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#define ASSERT_OK(stk)                                                  \
+#define ASSERT_OK(stk, line)                                                  \
 {                                                                       \
     int res = StackVerify(stk);                                         \
-    if(res) { StackDump(stk); abort(); }                                         \
+    if(res) { StackDump(stk, line); abort(); }                                         \
 }
 
 #define STACK_INIT(stk) { StackInit(&stk); stk.name = #stk; }
@@ -36,7 +36,7 @@ int StackCheckForResize(Stack_t* stk);
 int StackPush(Element_t pushed, Stack_t* stk);
 Element_t StackPop(Stack_t *stk);
 int StackVerify(Stack_t* stk);
-void StackDump(Stack_t* stk);
+void StackDump(Stack_t* stk, int line);
 
 struct
 {
@@ -78,7 +78,7 @@ void StackInit(Stack_t* stk)
 }
 void StackDestruct(Stack_t* stk)
 {
-    ASSERT_OK(stk);
+    ASSERT_OK(stk, __LINE__);
     free(stk->data);
     stk->current = 0;
     stk->size = 0;
@@ -86,19 +86,19 @@ void StackDestruct(Stack_t* stk)
 }
 int StackCheckForResize(Stack_t* stk)
 {
-    ASSERT_OK(stk);
+    ASSERT_OK(stk,  __LINE__);
     if (stk->size == stk->current)
     {
-        stk->data = (Element_t*)realloc(stk->data, stk->current * Resize_Smaller * sizeof(Element_t));
+        stk->data = (Element_t*)realloc(stk->data, stk->size * Resize_Smaller * sizeof(Element_t));
         stk->size *= Resize_Smaller;
-        ASSERT_OK(stk);
+        ASSERT_OK(stk, __LINE__);
         return 1;
     }
     else if (stk->current > 0 && stk->size / (stk->current + 1) > Resize_Smaller && stk->size > Default_Size)
     {
         stk->data = (Element_t*)realloc(stk->data, (stk->size / Resize_Smaller) * sizeof(Element_t));
         stk->size /= Resize_Smaller;
-        ASSERT_OK(stk);
+        ASSERT_OK(stk, __LINE__);
         return 1;
     }
     return 0;
@@ -108,12 +108,12 @@ int StackPush(Element_t pushed, Stack_t* stk)
     StackCheckForResize(stk);
     stk->data[stk->current] = pushed;
     stk->current++;
-    ASSERT_OK(stk);
+    ASSERT_OK(stk, __LINE__);
     return 1;
 }
 Element_t StackPop(Stack_t *stk)
 {
-    ASSERT_OK(stk);
+    ASSERT_OK(stk, __LINE__);
     Element_t temp = { PoisonValue };
     if (stk->current > 0)
     {
@@ -122,16 +122,12 @@ Element_t StackPop(Stack_t *stk)
         temp = stk->data[stk->current];
         stk->data[stk->current] = PoisonValue;
         StackCheckForResize(stk);
+        stk->size = 1;
     }
     return temp;
 }
 int StackVerify(Stack_t* stk)
 {
-    if (stk->data == NULL)
-    {
-        stk->error = VERIFY_ERROR_DATA;
-        return VERIFY_ERROR_DATA;
-    }
     if (stk->size < 0)
     {
         stk->error = VERIFY_ERROR_SIZE;
@@ -146,15 +142,20 @@ int StackVerify(Stack_t* stk)
     {
         return stk->error;
     }
+    if (stk->data == NULL)
+    {
+        stk->error = VERIFY_ERROR_DATA;
+        return VERIFY_ERROR_DATA;
+    }
     return VERIFY_OK;
 }
-void StackDump(Stack_t* stk)
+void StackDump(Stack_t* stk, int line)
 {
-    printf("Stack information:\n"
+    printf("Line: %d\nStack information:\n"
             "\tname: %s\n"
             "\tsize: %d\n"
             "\tcurrent: %d\n"
-            "\terror: %d ", stk->name, stk->size, stk->current, stk->error);
+            "\terror: %d ", line, stk->name, stk->size, stk->current, stk->error);
     switch(stk->error)
     {
         case VERIFY_OK:
