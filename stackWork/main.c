@@ -38,13 +38,28 @@ Element_t StackPop(Stack_t *stk);
 int StackVerify(Stack_t* stk);
 void StackDump(Stack_t* stk);
 
+struct
+{
+    char pinus[1];
+    Stack_t* hole;
+} StackPenetrator;
+
 int main()
 {
     Stack_t stack1;
     STACK_INIT(stack1);
-    Element_t t = { 2 };
-    StackPush(t, &stack1);
-    StackDestruct(&stack1);
+    for (int i = -500; i <= -400; ++i)
+    {
+        StackPush (i, &stack1);
+    }
+
+
+    while (stack1.current != 0)
+    {
+        printf ("hello\n");
+        StackPop (&stack1);
+    }
+
     return 0;
 }
 
@@ -74,14 +89,14 @@ int StackCheckForResize(Stack_t* stk)
     ASSERT_OK(stk);
     if (stk->size == stk->current)
     {
-        stk->data = (Element_t*)realloc(stk->data, stk->current * Resize_Smaller);
+        stk->data = (Element_t*)realloc(stk->data, stk->current * Resize_Smaller * sizeof(Element_t));
         stk->size *= Resize_Smaller;
         ASSERT_OK(stk);
         return 1;
     }
     else if (stk->current > 0 && stk->size / (stk->current + 1) > Resize_Smaller && stk->size > Default_Size)
     {
-        stk->data = (Element_t*)realloc(stk->data, stk->size / Resize_Smaller);
+        stk->data = (Element_t*)realloc(stk->data, (stk->size / Resize_Smaller) * sizeof(Element_t));
         stk->size /= Resize_Smaller;
         ASSERT_OK(stk);
         return 1;
