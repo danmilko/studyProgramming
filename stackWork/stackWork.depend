@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1569363241 source:/home/milkodan/Документы/Codeblock Projects/start1/stackWork/main.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+
