@@ -1,6 +1,16 @@
 # depslib dependency file v1.0
-1569404283 source:/home/milkodan/Документы/Codeblock Projects/start1/stackWork/main.c
+1569869623 source:/home/milkodan/Документы/Codeblock Projects/start1/stackWork/main.c
 	<stdio.h>
 	<stdlib.h>
 	<assert.h>
+	"MilkoStack.h"
+
+1569869623 source:/home/milkodan/Документы/Codeblock Projects/start1/stackWork/MilkoStack.c
+	<stddef.h>
+
+1569869415 /home/milkodan/Документы/Codeblock Projects/start1/stackWork/MilkoStack.h
+	"MilkoStack.c"
+
+1569869623 /home/milkodan/Документы/Codeblock Projects/start1/stackWork/MilkoStack.c
+	<stddef.h>
 
