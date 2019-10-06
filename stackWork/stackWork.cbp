@@ -31,8 +31,12 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="MilkoStack" />
 		<Unit filename="MilkoStack.h" />
+		<Unit filename="StackTest.c">
+			<Option compilerVar="CC" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="StackTest.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
