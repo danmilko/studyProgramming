@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1570277879 source:/home/milkodan/Документы/Codeblock Projects/start1/assembler1/main.cpp
+	<stdlib.h>
+	<stdio.h>
+	<assert.h>
+	<string.h>
+	"oneginLibCpp.h"
+	"commands.h"
+
+1570006971 /home/milkodan/Документы/Codeblock Projects/start1/assembler1/oneginLibCpp.h
+	"oneginLib.cpp"
+
+1570007082 /home/milkodan/Документы/Codeblock Projects/start1/assembler1/oneginLib.cpp
+	<stdlib.h>
+	<stdio.h>
+	<assert.h>
+
+1570351575 /home/milkodan/Документы/Codeblock Projects/start1/assembler1/commands.h
+
