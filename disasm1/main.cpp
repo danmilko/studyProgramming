@@ -20,7 +20,9 @@ int main()
     FILE* rf = fopen(nameOfFile, "rb");
     while (sizeOfBin > 0)
     {
-        buffer = strcat(buffer, GetTextOfCommand(rf, &sizeOfBin));
+        char* insertCmd = GetTextOfCommand(rf, &sizeOfBin);
+        buffer = strcat(buffer, insertCmd);
+        free(insertCmd);
     }
     fclose(rf);
 
