@@ -62,61 +62,22 @@ char* GetTextOfCommand(FILE* rf, int* sizeOfBin)
                 abort();
         }
     }
+    else if (cmd >= 1 && cmd <= END)
+    {
+        if (cmd == END)
+        {
+            sprintf(result, "END");
+            *sizeOfBin = 0;
+            return result;
+        }
+        sprintf(result, "%s\n", CommandNames[cmd - 1]);
+        *sizeOfBin -= 1;
+        return result;
+    }
     else
     {
-        switch (cmd)
-        {
-            case PRINT:
-            {
-                sprintf(result, "PRINT\n");
-                *sizeOfBin -= 1;
-                return result;
-            }
-            case DUMP:
-                sprintf(result, "DUMP\n");
-                *sizeOfBin -= 1;
-                return result;
-            case END:
-                sprintf(result, "END");
-                *sizeOfBin = 0;
-                return result;
-        }
-        switch (cmd)
-        {
-            case ADD:
-            {
-                sprintf(result, "ADD\n");
-                *sizeOfBin -= 1;
-                return result;
-            }
-            case SUB:
-            {
-                sprintf(result, "SUB\n");
-                *sizeOfBin -= 1;
-                return result;
-            }
-            case MULT:
-            {
-                sprintf(result, "MULT\n");
-                *sizeOfBin -= 1;
-                return result;
-            }
-            case DIV:
-            {
-                sprintf(result, "DIV\n");
-                *sizeOfBin -= 1;
-                return result;
-            }
-            case MOD:
-            {
-                sprintf(result, "MOD\n");
-                *sizeOfBin -= 1;
-                return result;
-            }
-            default:
-                printf("ERROR: Unknown command.");
-                abort();
-        }
+        printf("ERROR: Unknown command.");
+        abort();
     }
 }
 
