@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1570352125 source:/home/milkodan/Документы/Codeblock Projects/start1/cpu1/main.cpp
+1570352295 source:/home/milkodan/Документы/Codeblock Projects/start1/cpu1/main.cpp
 	<stdio.h>
 	<stdlib.h>
 	"commands.h"
