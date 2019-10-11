@@ -47,6 +47,7 @@ int main()
     fclose(wf);
 
     free(index);
+    free(result);
     free(buffer);
 
     return 0;
@@ -68,6 +69,7 @@ int WorkWithCode(char* result, String* index, int countStrings)
         {
             result[totalCount] = *cmd;
             totalCount++;
+            free(cmd);
             return totalCount;
         }
         else
@@ -77,6 +79,7 @@ int WorkWithCode(char* result, String* index, int countStrings)
                 result[totalCount + j] = *(cmd + j);
             }
         }
+        free(cmd);
         totalCount += countLine;
     }
     printf("ERROR WHILE COMPILING: NO ENDING.");
@@ -118,6 +121,7 @@ char* ConvertStringToCode(String str, int* countCode)
                 {
                     res[i + 1] = num[i];
                 }
+                free(num);
                 *countCode = 5;
                 return res;
             }
