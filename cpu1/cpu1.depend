@@ -1,12 +1,14 @@
 # depslib dependency file v1.0
-1570352295 source:/home/milkodan/Документы/Codeblock Projects/start1/cpu1/main.cpp
+1571409521 source:/home/milkodan/Документы/Codeblock Projects/start1/cpu1/main.cpp
 	<stdio.h>
 	<stdlib.h>
 	"commands.h"
 	"oneginLibCpp.h"
 	"MilkoStack.h"
+	"CommandDefines.h"
 
-1570351575 /home/milkodan/Документы/Codeblock Projects/start1/cpu1/commands.h
+1571410249 /home/milkodan/Документы/Codeblock Projects/start1/cpu1/commands.h
+	"CommandDefines.h"
 
 1570006971 /home/milkodan/Документы/Codeblock Projects/start1/cpu1/oneginLibCpp.h
 	"oneginLib.cpp"
@@ -21,4 +23,6 @@
 
 1570274155 /home/milkodan/Документы/Codeblock Projects/start1/cpu1/MilkoStack.c
 	<stddef.h>
+
+1571410290 /home/milkodan/Документы/Codeblock Projects/start1/cpu1/CommandDefines.h
 

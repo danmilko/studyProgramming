@@ -3,6 +3,7 @@
 #include <string.h>
 #include "commands.h"
 #include "oneginLibCpp.h"
+#include "MilkoStack.c"
 
 int ConvertBinaryToInt(char bin[4]);
 char* GetTextOfCommand(FILE* rf, int* sizeOfBin);
@@ -42,27 +43,59 @@ int main()
 char* GetTextOfCommand(FILE* rf, int* sizeOfBin)
 {
     char cmd = 0;
-    char* result = (char*)calloc(16, 1);
+    char* result = (char*)calloc(32, 1);
     fread(&cmd, 1, 1, rf);
+
+    if (cmd == END)
+    {
+        sprintf(result, "END");
+        *sizeOfBin = 0;
+        return result;
+    }
+
+    switch (cmd)
+    {
+        #define DEF_CMD(name, length, number_args, code)\
+        case name:                                      \
+        {                                               \
+            sprintf(result, "%s", #name);                     \
+            printf("%d\n", *sizeOfBin);                     \
+            (*sizeOfBin)--;                            \
+            for (int i = 0; i < number_args; i++)       \
+            {                                                                   \
+                Element_t bin = {};                                       \
+                fread(&bin, 1, sizeof(Element_t), rf);                  \
+                sprintf(result, "%s %d", result, bin);  \
+                (*sizeOfBin) -= sizeof(Element_t);                        \
+            }                                           \
+            sprintf(result, "%s\n", result);                      \
+            return result;                              \
+        }
+
+        #include "CommandDefines.h"
+
+        #undef DEF_CMD
+        default:
+        {
+            printf("ERROR: Unknown command.");
+            abort();
+        }
+    }
+/*
     if (cmd < ADD)
     {
         switch(cmd)
         {
             case PUSH:
             {
-                char bin[4] = {};
-                fread(bin, 1, 4, rf);
-                int pushed = ConvertBinaryToInt(bin);
-                sprintf(result, "PUSH %d\n", pushed);
-                *sizeOfBin -= 5;
+                Element_t bin = {};
+                sprintf(result, "PUSH %d\n", bin);
+                *sizeOfBin -= 1 + sizeof(Element_t);
                 return result;
             }
-            default:
-                printf("ERROR: Unknown command.");
-                abort();
         }
     }
-    else if (cmd >= 1 && cmd <= END)
+    else if (cmd >= ADD && cmd <= END)
     {
         if (cmd == END)
         {
@@ -70,7 +103,7 @@ char* GetTextOfCommand(FILE* rf, int* sizeOfBin)
             *sizeOfBin = 0;
             return result;
         }
-        sprintf(result, "%s\n", CommandNames[cmd - 1]);
+        sprintf(result, "%s\n", CommandNames[cmd]);
         *sizeOfBin -= 1;
         return result;
     }
@@ -79,6 +112,7 @@ char* GetTextOfCommand(FILE* rf, int* sizeOfBin)
         printf("ERROR: Unknown command.");
         abort();
     }
+    */
 }
 
 int ConvertBinaryToInt(char bin[4])

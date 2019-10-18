@@ -31,74 +31,22 @@ void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin)
 {
     char cmd = 0;
     fread(&cmd, 1, 1, rf);
-    if (cmd < ADD)
+    switch(cmd)
     {
-        switch(cmd)
-        {
-            case PUSH:
-            {
-                char bin[4] = {};
-                fread(bin, 1, 4, rf);
-                int pushed = ConvertBinaryToInt(bin);
-                StackPush(pushed, stk);
-                *sizeOfBin -= 4;
-                break;
-            }
-            default:
-                printf("ERROR: Unknown command.");
-                abort();
+    #define DEF_CMD(name, length, number_args, code)\
+        case name: \
+        {           \
+            code        \
+            return;     \
         }
-    }
-    else
-    {
-        switch (cmd)
-        {
-            case PRINT:
-            {
-                int output = StackPop(stk);
-                StackPush(output, stk);
-                printf("%d\n", output);
-                return;
-            }
-            case DUMP:
-                StackDump(stk, __LINE__);
-                return;
-            case END:
-                exit(0);
 
-        }
-        int a = StackPop(stk);
-        int b = StackPop(stk);
-        switch (cmd)
+        #include "CommandDefines.h"
+
+        #undef DEF_CMD
+        default:
         {
-            case ADD:
-            {
-                StackPush(a + b, stk);
-                return;
-            }
-            case SUB:
-            {
-                StackPush(a - b, stk);
-                return;
-            }
-            case MULT:
-            {
-                StackPush(a * b, stk);
-                return;
-            }
-            case DIV:
-            {
-                StackPush(b / a, stk);
-                return;
-            }
-            case MOD:
-            {
-                StackPush(b % a, stk);
-                return;
-            }
-            default:
-                printf("ERROR: Unknown command.");
-                abort();
+            printf("ERROR: Unknown command.");
+            abort();
         }
     }
 }

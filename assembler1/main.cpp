@@ -99,34 +99,37 @@ char* ConvertIntInBinary(int num)
 }
 char* ConvertStringToCode(String str, int* countCode)
 {
-    for (int i = 1; i <= END; i++)
-    {
-        if (strncmp(str.begin, CommandNames[i - 1], strlen(CommandNames[i - 1])) == 0)
-        {
-            if (i >= ADD)
-            {
-                char* res = (char*)calloc(1, 1);
-                res[0] = i;
-                *countCode = 1;
-                return res;
-            }
-            else
-            {
-                char* res = (char*)calloc(5, 1);
-                *str.end = '\0';
-                int arg = atoi(str.begin + strlen(CommandNames[i - 1]));
-                char* num = ConvertIntInBinary(arg);
-                res[0] = i;
-                for (int i = 0; i < 4; i++)
-                {
-                    res[i + 1] = num[i];
-                }
-                free(num);
-                *countCode = 5;
-                return res;
-            }
+    #define DEF_CMD( name, length, number_args, code ) \
+    \
+        if (strncmp(str.begin, #name, length) == 0)  \
+        {                                               \
+            if (number_args <= 0)                               \
+            {                                               \
+                char* res = (char*)calloc(1, 1);            \
+                res[0] = name;                                 \
+                *countCode = 1;                             \
+                return res;                                 \
+            }                                               \
+            else                    \
+            {                               \
+                char* res = (char*)calloc(5, 1);            \
+                *str.end = '\0';                            \
+                int arg = atoi(str.begin + length);        \
+                char* num = ConvertIntInBinary(arg);                        \
+                res[0] = name;                                             \
+                for (int i = 0; i < 4; i++)                             \
+                {                                                       \
+                    res[i + 1] = num[i];                                \
+                }                                                       \
+                free(num);                                              \
+                *countCode = 5;                                         \
+                return res;                                             \
+            }                                                           \
         }
-    }
+
+    #include "CommandDefines.h"
+
+    #undef DEF_CMD
     return nullptr;
 }
 
