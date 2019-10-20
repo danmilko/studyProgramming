@@ -7,61 +7,87 @@ DEF_CMD(name, length, args,
 
 DEF_CMD(PUSH, 4, 1,
 {
-    char bin[4] = {};
-    fread(bin, 1, sizeof(Element_t), rf);
-    int pushed = ConvertBinaryToInt(bin);
-    StackPush(pushed, stk);
-    *sizeOfBin -= 4;
+    char showing = 0;
+    fread(&showing, 1, 1, rf);
+    *sizeOfBin -= 1;
+    Element_t bin = {};
+    switch (showing)
+    {
+        case 0:
+            fread(&bin, sizeof(Element_t), 1, rf);
+            StackPush(bin, stk);
+            *sizeOfBin -= sizeof(Element_t);
+            break;
+        default:
+            fread(&bin, sizeof(Element_t), 1, rf);
+            StackPush(regs[(int)bin], stk);
+            *sizeOfBin -= sizeof(Element_t);
+            break;
+    }
+    break;
+})
+
+DEF_CMD(POP, 3, 1,
+{
+    char showing = 0;
+    fread(&showing, 1, 1, rf);
+    *sizeOfBin -= 1;
+    Element_t bin = {};
+    switch (showing)
+    {
+        case 0:
+            fread(&bin, sizeof(Element_t), 1, rf);
+            StackPop(stk);
+            *sizeOfBin -= sizeof(Element_t);
+            break;
+        default:
+            fread(&bin, sizeof(Element_t), 1, rf);
+            regs[(int)bin] = StackPop(stk);
+            *sizeOfBin -= sizeof(Element_t);
+            break;
+    }
     break;
 })
 
 DEF_CMD(ADD, 3, 0,
 {
-    int a = StackPop(stk);
-    int b = StackPop(stk);
+    Element_t a = StackPop(stk);
+    Element_t b = StackPop(stk);
 
     StackPush(a + b, stk);
 })
 
 DEF_CMD(SUB, 3, 0,
 {
-    int a = StackPop(stk);
-    int b = StackPop(stk);
+    Element_t a = StackPop(stk);
+    Element_t b = StackPop(stk);
 
     StackPush(a - b, stk);
 })
 
 DEF_CMD(MULT, 4, 0,
 {
-    int a = StackPop(stk);
-    int b = StackPop(stk);
+    Element_t a = StackPop(stk);
+    Element_t b = StackPop(stk);
 
     StackPush(a * b, stk);
 })
 
 DEF_CMD(DIV, 3, 0,
 {
-    int a = StackPop(stk);
-    int b = StackPop(stk);
+    Element_t a = StackPop(stk);
+    Element_t b = StackPop(stk);
 
     StackPush(b / a, stk);
-})
-
-DEF_CMD(MOD, 3, 0,
-{
-    int a = StackPop(stk);
-    int b = StackPop(stk);
-
-    StackPush(a % b, stk);
 })
 
 DEF_CMD(PRINT, 5, 0,
 {
     if (stk->current > 0)
     {
-        int output = StackPop(stk);
+        Element_t output = StackPop(stk);
         StackPush(output, stk);
-        printf("%d\n", output);
+        printf("%.2lf\n", output);
     }
     else
     {

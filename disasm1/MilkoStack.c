@@ -57,7 +57,7 @@ const int Hash_Mult = 37;
 #define VERIFY_OK 0
 #define VERIFY_DESTRUCTED -1
 
-typedef int Element_t;
+typedef double Element_t;
 /**
         @brief This is my stack realisation. It includes some signalization
         (if SET_HASHER or/and SET_SAVERS are defined)
@@ -388,7 +388,7 @@ unsigned int CalcHash(Stack_t* stk)
     int old_hash = stk->hash;
     stk->hash = 0;
     unsigned int res = 1;
-    for (char* i = (char*)stk; i <= (char*)(&stk->error) + sizeof(int); i++)
+    for (char* i = (char*)stk; i <= (char*)(&stk->error) + sizeof(Element_t); i++)
     {
         //printf("%d ", *i);
         res = (res * Hash_Mult) + (*i + 129) % Hash_Mult;

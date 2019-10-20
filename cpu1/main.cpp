@@ -5,7 +5,9 @@
 #include "MilkoStack.h"
 
 int ConvertBinaryToInt(char bin[4]);
-void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin);
+void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin, int allSize);
+
+Element_t regs[26] = {};
 
 int main()
 {
@@ -19,15 +21,16 @@ int main()
     STACK_INIT(&stk);
 
     FILE* rf = fopen(nameOfFile, "rb");
-    for (int i = 0; i < sizeOfBin; i++)
+    int allSize = sizeOfBin;
+    while (sizeOfBin > 0)
     {
-        ExecuteCommand(rf, &stk, &sizeOfBin);
+        ExecuteCommand(rf, &stk, &sizeOfBin, allSize);
     }
     fclose(rf);
     return 0;
 }
 
-void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin)
+void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin, int allSize)
 {
     char cmd = 0;
     fread(&cmd, 1, 1, rf);

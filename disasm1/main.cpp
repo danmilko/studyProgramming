@@ -63,10 +63,21 @@ char* GetTextOfCommand(FILE* rf, int* sizeOfBin)
             (*sizeOfBin)--;                            \
             for (int i = 0; i < number_args; i++)       \
             {                                                                   \
+                char showing = 0;                                           \
                 Element_t bin = {};                                       \
-                fread(&bin, 1, sizeof(Element_t), rf);                  \
-                sprintf(result, "%s %d", result, bin);  \
-                (*sizeOfBin) -= sizeof(Element_t);                        \
+                fread(&showing, 1, 1, rf);                  \
+                if (showing == 0)                                       \
+                {                                                       \
+                    fread(&bin, sizeof(Element_t), 1, rf);              \
+                    sprintf(result, "%s %lf", result, bin);             \
+                    (*sizeOfBin) -= sizeof(Element_t) + 1;                        \
+                }                                                               \
+                else                                                            \
+                {                                                               \
+                    fread(&bin, sizeof(Element_t), 1, rf);                      \
+                    sprintf(result, "%s %cx", result, (char)bin + 97);               \
+                    (*sizeOfBin) -= sizeof(Element_t) + 1;                        \
+                }                                                          \
             }                                           \
             sprintf(result, "%s\n", result);                      \
             return result;                              \

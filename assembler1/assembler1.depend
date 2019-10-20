@@ -1,11 +1,12 @@
 # depslib dependency file v1.0
-1571409906 source:/home/milkodan/Документы/Codeblock Projects/start1/assembler1/main.cpp
+1571570995 source:/home/milkodan/Документы/Codeblock Projects/start1/assembler1/main.cpp
 	<stdlib.h>
 	<stdio.h>
 	<assert.h>
 	<string.h>
 	"oneginLibCpp.h"
 	"commands.h"
+	"MilkoStack.c"
 	"CommandDefines.h"
 
 1570006971 /home/milkodan/Документы/Codeblock Projects/start1/assembler1/oneginLibCpp.h
@@ -19,5 +20,8 @@
 1571410241 /home/milkodan/Документы/Codeblock Projects/start1/assembler1/commands.h
 	"CommandDefines.h"
 
-1571408957 /home/milkodan/Документы/Codeblock Projects/start1/assembler1/CommandDefines.h
+1571571178 /home/milkodan/Документы/Codeblock Projects/start1/assembler1/CommandDefines.h
+
+1571489576 /home/milkodan/Документы/Codeblock Projects/start1/assembler1/MilkoStack.c
+	<stddef.h>
 

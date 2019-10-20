@@ -5,8 +5,9 @@
 
 #include "oneginLibCpp.h"
 #include "commands.h"
+#include "MilkoStack.c"
 
-int WorkWithCode(char* result, String* index, int countString);
+int WorkWithCode(char* result, String* index, int countString, char labels[1024][64]);
 char* ConvertIntInBinary(int num);
 char* ConvertStringToCode(String str, int* countLine);
 
@@ -35,7 +36,9 @@ int main()
     char* result = (char*)calloc(sizeOfBuffer * 2, 1);
     //buffer = (char*)calloc(sizeOfBuffer, 1);
 
-    int totalCount = WorkWithCode(result, index, countStrings);
+    char labels[1024][64] = {};
+
+    int totalCount = WorkWithCode(result, index, countStrings, labels);
 
     printf("Enter the name of result file (max 1024 symbols) or press ENTER to use default name \"program.cbdm\": "); //cbdm - created by Dan Milko
     strcpy(nameOfFile, "program.cbdm");
@@ -53,16 +56,20 @@ int main()
     return 0;
 }
 
-int WorkWithCode(char* result, String* index, int countStrings)
+int WorkWithCode(char* result, String* index, int countStrings, char labels[1024][64])
 {
     int totalCount = 0;
     int countLine = 0;
+    int currentLabel = 0;
     for (int i = 0; i < countStrings - 1; i++)
     {
+        countLine = 0;
         char* cmd = ConvertStringToCode(index[i], &countLine);
+
+        printf("%d\n", countLine);
         if (cmd == nullptr)
         {
-            printf("ERROR WHILE COMPILING: UNKNOWN COMMAND. LINE: %d\n", i + 1);
+            printf("ERROR WHILE COMPILING: UNKNOWN COMMAND OR ARGUMENT. LINE: %d\n", i + 1);
             abort();
         }
         else if (*cmd == (char)END)
@@ -71,6 +78,13 @@ int WorkWithCode(char* result, String* index, int countStrings)
             totalCount++;
             free(cmd);
             return totalCount;
+        }
+        else if (*cmd == (char)LABEL)
+        {
+            for (int j = 7; j < countLine; j++)
+            {
+                *(labels[currentLabel] + j) = *(cmd + j);
+            }
         }
         else
         {
@@ -99,30 +113,61 @@ char* ConvertIntInBinary(int num)
 }
 char* ConvertStringToCode(String str, int* countCode)
 {
-    #define DEF_CMD( name, length, number_args, code ) \
+    #define DEF_CMD(name, length, number_args, code) \
     \
         if (strncmp(str.begin, #name, length) == 0)  \
-        {                                               \
+        { \
+            *str.end = '\0';                            \
+            printf("%s\n", str.begin);                                          \
             if (number_args <= 0)                               \
             {                                               \
+                *countCode = 1;                            \
                 char* res = (char*)calloc(1, 1);            \
-                res[0] = name;                                 \
-                *countCode = 1;                             \
+                res[0] = name;                              \
                 return res;                                 \
             }                                               \
             else                    \
             {                               \
-                char* res = (char*)calloc(5, 1);            \
-                *str.end = '\0';                            \
-                int arg = atoi(str.begin + length);        \
-                char* num = ConvertIntInBinary(arg);                        \
+                char* res = (char*)calloc(1 + (sizeof(Element_t) + 1) * number_args, 1);            \
+                int countMove = 0;                                        \
+                int countTotalMove = 0;                                 \
+                *countCode += 1;                                         \
                 res[0] = name;                                             \
-                for (int i = 0; i < 4; i++)                             \
-                {                                                       \
-                    res[i + 1] = num[i];                                \
+                for (int i = 0; i < number_args; i++)                             \
+                {                                                               \
+                    Element_t temp = {};                                                               \
+                    char* reg = (char*)calloc(64, 1);                                        \
+                    if (sscanf(str.begin + length + countTotalMove, "%lf%n", &temp, &countMove) == 1)          \
+                    {                                                           \
+                        printf("%d %.2lf %d\n", i, temp, name);                              \
+                        *(res + *countCode) = 0;                                                \
+                        memcpy(res + 2 + i * (sizeof(Element_t) + 1), &temp, sizeof(Element_t));            \
+                        countTotalMove += countMove + 1;\
+                        *countCode += (sizeof(Element_t) + 1); \
+                    }                                                               \
+                    else if (sscanf(str.begin + length + countTotalMove, "%s", reg) == 1)                \
+                    {\
+                        printf("%d\n", i);                                 \
+                        if (name < JUMP && name != LABEL)                                \
+                        {                                               \
+                            Element_t index = (double)(reg[0] - 97);                                              \
+                            if (index < 0)                                              \
+                            {                                                                   \
+                                return nullptr;                                                                        \
+                            }                                                                       \
+                            *(res + *countCode) = 1;                                                \
+                            memcpy(res + 2 + i * (sizeof(Element_t) + 1), &index, sizeof(Element_t));\
+                            countTotalMove += 3;                                            \
+                            *countCode += (sizeof(Element_t) + 1); \
+                        }                                                   \
+                    }                                                                           \
+                    else                                                            \
+                    {                                                               \
+                        return nullptr;                                                         \
+                    }                                                                       \
                 }                                                       \
-                free(num);                                              \
-                *countCode = 5;                                         \
+                                                             \
+                                                         \
                 return res;                                             \
             }                                                           \
         }
