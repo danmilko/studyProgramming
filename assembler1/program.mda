@@ -1,11 +1,100 @@
+CALL scan
+PUSH 0
+PUSH ax
+JE zero_ax
+CALL calc_disc
+PUSH 0
+JE one_root
+CALL two_roots
+JUMP end
+
+
+
+LABEL scan
+SCAN
+SCAN
+SCAN
+POP cx
+POP bx
+POP ax
+RETURN
+
+LABEL calc_disc
+PUSH 4
+PUSH ax
+PUSH cx
+MULT
+MULT
+PUSH bx
+PUSH bx
+MULT
+SUB
+POP dx
+PUSH dx
+PUSH 0
+JS no_root
+PUSH dx
+SQRT
+RETURN
+
+LABEL zero_ax
+PUSH 0
+PUSH bx
+JE no_root
 PUSH 1
-CALL incr
+PRINT
+POP 0
+PUSH bx
+PUSH cx
+PUSH -1
+MULT
+DIV
 PRINT
 JUMP end
 
-LABEL incr
-SCAN
+LABEL no_root
+PUSH 0
+PRINT
+JUMP end
+
+LABEL two_roots
+CALL first_root
+CALL second_root
+PRINT
+POP 0
+PRINT
+RETURN
+
+LABEL one_root
+CALL first_root
+PUSH 1
+PRINT
+POP 0
+PRINT
+JUMP end
+
+LABEL first_root
+PUSH bx
+PUSH -1
+MULT
+PUSH dx
+SUB
+PUSH ax
+PUSH 2
+MULT
+DIV
+RETURN
+
+LABEL second_root
+PUSH bx
+PUSH -1
+MULT
+PUSH dx
 ADD
+PUSH ax
+PUSH 2
+MULT
+DIV
 RETURN
 
 LABEL end

@@ -1,0 +1,19 @@
+CALL scan
+PUSH bx
+PUSH 0
+JE end
+PRINT
+
+JUMP end
+
+LABEL scan
+SCAN
+POP ax
+SCAN
+POP bx
+SCAN
+POP cx
+RETURN
+
+LABEL end
+END

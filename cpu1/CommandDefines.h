@@ -7,11 +7,19 @@ DEF_CMD(name, length, args,
 
 #define PUSH_ELEM(elem) StackPush(elem, stk);
 #define DECREASE_ON_ELEM *sizeOfBin -= sizeof(Element_t);
-#define ARITHMETIC(symbol)          \
-{                                   \
-    Element_t a = StackPop(stk);    \
-    Element_t b = StackPop(stk);    \
-    StackPush(a symbol b, stk);     \
+#define ARITHMETIC(symbol)                          \
+{                                                   \
+    if (stk->current > 1)                           \
+    {                                               \
+        Element_t a = StackPop(stk);                \
+        Element_t b = StackPop(stk);                \
+        Element_t c = a symbol b;                   \
+        StackPush(c, stk);                          \
+    }                                               \
+    else                                            \
+    {                                               \
+        printf("Error: popping empty stack.\n");    \
+    }                                               \
 }
 
 #define DO_JUMP                                 \
@@ -105,7 +113,7 @@ DEF_CMD(SCAN, 4, 0,
 {
     Element_t read = {};
     scanf("%lf", &read);
-    PUSH_ELEM(read);
+    StackPush(read, stk);
 })
 
 DEF_CMD(PRINT, 5, 0,
@@ -118,13 +126,20 @@ DEF_CMD(PRINT, 5, 0,
     }
     else
     {
-        printf("Error: empty stack.\n");
+        printf("Error: popping empty stack.\n");
     }
 })
 
 DEF_CMD(DUMP, 4, 0,
 {
     StackDump(stk, __LINE__);
+})
+
+DEF_CMD(SQRT, 4, 0,
+{
+    Element_t a = StackPop(stk);
+    a = sqrt(a);
+    PUSH_ELEM(a);
 })
 
 DEF_CMD(END, 3, 0,
@@ -178,5 +193,6 @@ DEF_CMD(RETURN, 6, 0,
 {
     int ret_jump = StackPop(call_stk);
     fseek(rf, ret_jump, 0);
+    *sizeOfBin = allSize - (int)(ret_jump);
 })
 

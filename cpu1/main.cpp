@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "commands.h"
 #include "oneginLibCpp.h"
 #include "MilkoStack.h"

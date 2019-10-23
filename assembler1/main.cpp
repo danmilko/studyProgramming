@@ -16,9 +16,12 @@ char* ConvertIntInBinary(int num);
 char* ConvertStringToCode(String str, int* countLine, int* currentJump);
 void LabelsToNumbers(char* result, int totalCount);
 
-char labels[1024][32] = {};
-int labelsCount[1024] = {};
-char jumps[1024][32] = {};
+char labels[16][32] = {};
+int labelsCount[16] = {};
+char jumps[16][32] = {};
+
+int currentLabel = 0;
+int currentJump = 0;
 
 int main()
 {
@@ -71,12 +74,10 @@ int WorkWithCode(char* result, String* index, int countStrings, char labels[1024
 {
     int totalCount = 0;
     int countLine = 0;
-    int currentLabel = 0;
-    int currentJump = 0;
     for (int i = 0; i < countStrings - 1; i++)
     {
         countLine = 0;
-        if (*index[i].begin == '\n')
+        if (*index[i].begin == '\n' || strncmp(index[i].begin, "//", 2) == 0)
         {
             continue;
         }
@@ -131,41 +132,43 @@ int WorkWithCode(char* result, String* index, int countStrings, char labels[1024
 
 void LabelsToNumbers(char* result, int totalCount)
 {
+    int currJ = 0;
     for(int i = 0; i < totalCount; i++)
     {
         #define DEF_CMD(name, length, number_args, code)    \
         if (result[i] == (char)name)                        \
         {                                                           \
-            if (name < JUMP)                                                        \
+            if (name < JUMP || name == RETURN)                                                        \
             {                                                                   \
                 i += number_args * (sizeof(Element_t) + 1);                                 \
             }                                                                   \
             else                                                                    \
             {                                                                       \
-                int found = 0;                                                          \
-                for (int j = 0; j < 2; j++)                               \
+                int found = 0;                                                                       \
+                for (int k = 0; k < currentLabel; k++)                 \
                 {                                                                           \
-                    found = 0;                                                                            \
-                    for (int k = 0; k < 2; k++)                 \
-                    {                                                                           \
-                        if (!found)                                                                         \
-                        {                                                                                   \
-                            if (strcmp(jumps[j], labels[k] + 1) == 0 && labels[k] + 1 != "")                    \
+                    if (!found)                                                                         \
+                    {                                                                                   \
+                        if (strcmp(jumps[currJ], labels[k] + 1) == 0 && jumps[currJ][0] != '\0')                    \
+                        {                                                                               \
+                            Element_t copy = (double)(labelsCount[k]);                                    \
+                            memcpy(&result[i + 2], &copy, sizeof(Element_t));                               \
+                            found = 1;                                                                  \
+                            i += sizeof(Element_t) + 1;                                                     \
+                            currJ++;                                                                        \
+                            if (currJ == currentJump)                                                       \
                             {                                                                               \
-                                Element_t copy = (double)(labelsCount[k]);                                    \
-                                memcpy(&result[i + 2], &copy, sizeof(Element_t));                               \
-                                found = 1;                                                                  \
-                                i += sizeof(Element_t) + 2;                                                     \
-                                break;                                                                          \
-                            }                                                                                       \
+                                return;                                                                     \
+                            }                                                                               \
+                            break;                                                                          \
                         }                                                                                       \
-                    }                                                                                           \
+                    }                                                                                       \
                 }                                                                                                   \
                 if (!found)                                                                                     \
                 {                                                                                               \
-                    printf("ERROR WHILE COMPILING: NO LABEL FOR JUMP. JUMP LABEL: %s\n", jumps[i]);                     \
+                    printf("ERROR WHILE COMPILING: NO LABEL FOR JUMP. JUMP LABEL: %s\n", jumps[currJ]);                     \
                     abort();                                                                                    \
-                }                                                                                                   \
+                }                                                                                                 \
             }                                                                                                   \
         }
 

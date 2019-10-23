@@ -364,7 +364,7 @@ void StackDump(Stack_t* stk, int line)
         {
             printf("*");
         }
-        printf("\t{%d}: %d", i, stk->data[i]);
+        printf("\t{%d}: %lf", i, stk->data[i]);
         if (stk->data[i] == PoisonValue)
         {
             printf("\t[POISON]");
