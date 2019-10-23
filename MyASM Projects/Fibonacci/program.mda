@@ -1,0 +1,42 @@
+//Fibonacci's numbers
+SCAN
+POP ax
+PUSH 0
+PUSH 1
+POP bx
+POP cx
+PUSH cx
+PUSH bx
+CALL fibonacci
+PUSH bx
+PRINT
+JUMP end
+
+LABEL fibonacci
+PUSH ax
+PUSH 0
+JBE return
+PUSH 1
+PUSH ax
+SUB
+POP ax
+
+POP cx
+POP bx
+PUSH cx
+PUSH bx
+ADD
+PUSH bx
+POP cx
+POP bx
+PUSH bx
+PUSH cx
+CALL fibonacci
+RETURN
+
+LABEL return
+RETURN
+
+LABEL end
+END
+

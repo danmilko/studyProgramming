@@ -1,0 +1,54 @@
+//Fibonacci's numbers
+SCAN
+CALL fibonacci
+PRINT
+JUMP end
+
+LABEL fibonacci
+//getting n
+POP ax
+//if (n == 0)
+PUSH ax
+PUSH 0
+JBE return0
+//if (n == 1)
+PUSH ax
+PUSH 1
+JBE return1
+
+//n - 1
+PUSH ax
+PUSH 1
+PUSH ax
+SUB
+//F(n - 1)
+CALL fibonacci
+//getting n - 1
+POP bx
+POP ax
+PUSH bx
+//n - 2
+PUSH ax
+PUSH 2
+PUSH ax
+SUB
+//F(n - 2)
+CALL fibonacci
+//F(n - 1) + F(n - 2)
+POP bx
+POP ax
+PUSH bx
+ADD
+RETURN
+
+LABEL return0
+PUSH 0
+RETURN
+
+LABEL return1
+PUSH 1
+RETURN
+
+LABEL end
+END
+
