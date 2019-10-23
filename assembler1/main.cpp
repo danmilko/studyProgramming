@@ -16,13 +16,13 @@ char* ConvertIntInBinary(int num);
 char* ConvertStringToCode(String str, int* countLine, int* currentJump);
 void LabelsToNumbers(char* result, int totalCount);
 
-char labels[1024][32];
-int labelsCount[1024];
-char jumps[1024][32];
+char labels[1024][32] = {};
+int labelsCount[1024] = {};
+char jumps[1024][32] = {};
 
 int main()
 {
-    memset(labels, 0, 1024 * 32);
+    //memset(labels, 0, 1024 * 32);
     printf("Enter the name of code file (max 1024 symbols) or press ENTER to use default name \"program.mda\": ");
     char nameOfFile[1024] = "program.mda";
     scanf("%[^\n]", nameOfFile);
@@ -106,9 +106,10 @@ int WorkWithCode(char* result, String* index, int countStrings, char labels[1024
                     abort();
                 }
             }
-            for (int j = 1; j < 9; j++)
+            for (int j = 1; j <= strlen(cmd + 1); j++)
             {
                 (labels[currentLabel][j - 1]) = *(cmd + j);
+                //printf("%c", *(cmd + j));
             }
             labelsCount[currentLabel] = totalCount;
             currentLabel++;
@@ -142,15 +143,16 @@ void LabelsToNumbers(char* result, int totalCount)
             else                                                                    \
             {                                                                       \
                 int found = 0;                                                          \
-                for (int j = 0; j < sizeof(jumps) / sizeof(int); j++)                               \
-                {                                                                               \
-                    for (int k = 0; k < sizeof(labelsCount) / sizeof(int); k++)                 \
+                for (int j = 0; j < 2; j++)                               \
+                {                                                                           \
+                    found = 0;                                                                            \
+                    for (int k = 0; k < 2; k++)                 \
                     {                                                                           \
                         if (!found)                                                                         \
                         {                                                                                   \
                             if (strcmp(jumps[j], labels[k] + 1) == 0 && labels[k] + 1 != "")                    \
                             {                                                                               \
-                                Element_t copy = (double)(labelsCount[k]);                                  \
+                                Element_t copy = (double)(labelsCount[k]);                                    \
                                 memcpy(&result[i + 2], &copy, sizeof(Element_t));                               \
                                 found = 1;                                                                  \
                                 i += sizeof(Element_t) + 2;                                                     \
@@ -241,6 +243,7 @@ char* ConvertStringToCode(String str, int* countCode, int* currentJump)
                                 }                                                                                   \
                             }                                                                                   \
                             strcpy((res + 2), reg);                                               \
+                            *(res + 2 + strlen(reg) + 1) = '\0';                        \
                             return res;                                     \
                             *countCode = 0;                                \
                         }                                                       \
