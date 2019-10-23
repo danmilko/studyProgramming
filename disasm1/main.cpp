@@ -66,7 +66,7 @@ char* GetTextOfCommand(FILE* rf, int* sizeOfBin)
                 char showing = 0;                                           \
                 Element_t bin = {};                                       \
                 fread(&showing, 1, 1, rf);                  \
-                if (showing == 0)                                       \
+                if (showing != 1)                                       \
                 {                                                       \
                     fread(&bin, sizeof(Element_t), 1, rf);              \
                     sprintf(result, "%s %lf", result, bin);             \

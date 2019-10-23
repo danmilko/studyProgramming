@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1571579524 source:/home/milkodan/Документы/Codeblock Projects/start1/cpu1/main.cpp
+1571829297 source:/home/milkodan/Документы/Codeblock Projects/start1/cpu1/main.cpp
 	<stdio.h>
 	<stdlib.h>
 	"commands.h"
@@ -24,5 +24,5 @@
 1571489576 /home/milkodan/Документы/Codeblock Projects/start1/cpu1/MilkoStack.c
 	<stddef.h>
 
-1571579548 /home/milkodan/Документы/Codeblock Projects/start1/cpu1/CommandDefines.h
+1571829702 /home/milkodan/Документы/Codeblock Projects/start1/cpu1/CommandDefines.h
 

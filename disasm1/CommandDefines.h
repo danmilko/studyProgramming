@@ -81,6 +81,13 @@ DEF_CMD(DIV, 3, 0,
     StackPush(b / a, stk);
 })
 
+DEF_CMD(SCAN, 4, 0,
+{
+    Element_t read = {};
+    scanf("%lf", &read);
+    StackPush(read, stk);
+})
+
 DEF_CMD(PRINT, 5, 0,
 {
     if (stk->current > 0)
@@ -104,3 +111,40 @@ DEF_CMD(END, 3, 0,
 {
     exit(0);
 })
+
+DEF_CMD(LABEL, 5, 1,
+{
+
+})
+
+DEF_CMD(JUMP, 4, 1,
+{
+    Element_t bin = {};
+    fread(&bin, 1, sizeof(Element_t), rf);
+    fseek(rf, (int)bin, 0);
+    *sizeOfBin = allSize - (int)(bin);
+})
+
+/*
+DEF_CMD(JUMP, 4, 1,
+{
+    char showing = 0;
+    fread(&showing, 1, 1, rf);
+    *sizeOfBin -= 1;
+    Element_t bin = {};
+    switch (showing)
+    {
+        case 0:
+            fread(&bin, sizeof(Element_t), 1, rf);
+            fseek(rf, (int)bin, 0);
+            *sizeOfBin = allSize - (int)(bin);
+            break;
+        default:
+            fread(&bin, sizeof(Element_t), 1, rf);
+            fseek(rf, regs[(int)bin], 0);
+            printf("%lf\n", bin);
+            *sizeOfBin = allSize - (int)(bin);
+            break;
+    }
+})
+*/

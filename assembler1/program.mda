@@ -1,7 +1,12 @@
 PUSH 1
+CALL incr
 PRINT
-POP bx
-PUSH 3
-PUSH bx
-PRINT
+JUMP end
+
+LABEL incr
+SCAN
+ADD
+RETURN
+
+LABEL end
 END

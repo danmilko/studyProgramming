@@ -5,7 +5,7 @@
 #include "MilkoStack.h"
 
 int ConvertBinaryToInt(char bin[4]);
-void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin, int allSize);
+void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin, int allSize, Stack_t* call_stk);
 
 Element_t regs[26] = {};
 
@@ -20,20 +20,25 @@ int main()
     Stack_t stk;
     STACK_INIT(&stk);
 
+    Stack_t call_stk;
+    STACK_INIT(&call_stk);
+
     FILE* rf = fopen(nameOfFile, "rb");
     int allSize = sizeOfBin;
     while (sizeOfBin > 0)
     {
-        ExecuteCommand(rf, &stk, &sizeOfBin, allSize);
+        ExecuteCommand(rf, &stk, &sizeOfBin, allSize, &call_stk);
     }
     fclose(rf);
     return 0;
 }
 
-void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin, int allSize)
+void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin, int allSize, Stack_t* call_stk)
 {
     char cmd = 0;
+    //printf("Current position: %d\n", ftell(rf));
     fread(&cmd, 1, 1, rf);
+    *sizeOfBin -= 1;
     switch(cmd)
     {
     #define DEF_CMD(name, length, number_args, code)\
@@ -54,6 +59,7 @@ void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin, int allSize)
     }
 }
 
+//unused
 int ConvertBinaryToInt(char bin[4])
 {
     int mult = 1;
