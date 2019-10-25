@@ -1,0 +1,32 @@
+PUSH 1
+POP bx
+JUMP draw
+
+LABEL draw
+PUSH ax
+PUSH 1024
+JSE return
+PUSH bx
+PUSH 7
+JBE continue
+PUSH 1
+POP bx
+LABEL continue
+PUSH ax
+VIDEO bx
+PUSH ax
+PUSH 1
+ADD
+POP ax
+PUSH 1
+PUSH bx
+ADD
+POP bx
+JUMP draw
+
+LABEL return
+PAINT
+JUMP stop
+
+LABEL stop
+END
