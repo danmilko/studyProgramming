@@ -4,11 +4,18 @@
 #include "commands.h"
 #include "oneginLibCpp.h"
 #include "MilkoStack.h"
+#include <unistd.h>
+
+#define CONSOLE_CLEAR printf("%s", "\x1B[2J\x1B[H");
 
 int ConvertBinaryToInt(char bin[4]);
 void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin, int allSize, Stack_t* call_stk);
 
+const int sizeScreen = 32;
+
 Element_t regs[26] = {};
+
+int video[sizeScreen * sizeScreen] = {};
 
 int main()
 {
@@ -42,11 +49,11 @@ void ExecuteCommand(FILE* rf, Stack_t* stk, int* sizeOfBin, int allSize, Stack_t
     *sizeOfBin -= 1;
     switch(cmd)
     {
-    #define DEF_CMD(name, length, number_args, code)\
-        case name: \
-        {           \
-            code        \
-            return;     \
+    #define DEF_CMD(name, length, number_args, code)        \
+        case name:                                          \
+        {                                                   \
+            code                                            \
+            return;                                         \
         }
 
         #include "CommandDefines.h"

@@ -135,25 +135,25 @@ void LabelsToNumbers(char* result, int totalCount)
     int currJ = 0;
     for(int i = 0; i < totalCount; i++)
     {
-        #define DEF_CMD(name, length, number_args, code)    \
-        if (result[i] == (char)name)                        \
-        {                                                           \
-            if (name < JUMP || name == RETURN)                                                        \
-            {                                                                   \
-                i += number_args * (sizeof(Element_t) + 1);                                 \
-            }                                                                   \
-            else                                                                    \
-            {                                                                       \
-                int found = 0;                                                                       \
-                for (int k = 0; k < currentLabel; k++)                 \
-                {                                                                           \
-                    if (!found)                                                                         \
-                    {                                                                                   \
-                        if (strcmp(jumps[currJ], labels[k] + 1) == 0 && jumps[currJ][0] != '\0')                    \
-                        {                                                                               \
-                            Element_t copy = (double)(labelsCount[k]);                                    \
+        #define DEF_CMD(name, length, number_args, code)                                                    \
+        if (result[i] == (char)name)                                                                        \
+        {                                                                                                   \
+            if (name < JUMP || name == RETURN)                                                              \
+            {                                                                                               \
+                i += number_args * (sizeof(Element_t) + 1);                                                 \
+            }                                                                                               \
+            else                                                                                            \
+            {                                                                                               \
+                int found = 0;                                                                              \
+                for (int k = 0; k < currentLabel; k++)                                                      \
+                {                                                                                           \
+                    if (!found)                                                                             \
+                    {                                                                                       \
+                        if (strcmp(jumps[currJ], labels[k] + 1) == 0 && jumps[currJ][0] != '\0')            \
+                        {                                                                                   \
+                            Element_t copy = (double)(labelsCount[k]);                                      \
                             memcpy(&result[i + 2], &copy, sizeof(Element_t));                               \
-                            found = 1;                                                                  \
+                            found = 1;                                                                      \
                             i += sizeof(Element_t) + 1;                                                     \
                             currJ++;                                                                        \
                             if (currJ == currentJump)                                                       \
@@ -161,15 +161,15 @@ void LabelsToNumbers(char* result, int totalCount)
                                 return;                                                                     \
                             }                                                                               \
                             break;                                                                          \
-                        }                                                                                       \
+                        }                                                                                   \
                     }                                                                                       \
-                }                                                                                                   \
-                if (!found)                                                                                     \
-                {                                                                                               \
-                    printf("ERROR WHILE COMPILING: NO LABEL FOR JUMP. JUMP LABEL: %s\n", jumps[currJ]);                     \
-                    abort();                                                                                    \
-                }                                                                                                 \
-            }                                                                                                   \
+                }                                                                                           \
+                if (!found)                                                                                 \
+                {                                                                                           \
+                    printf("ERROR WHILE COMPILING: NO LABEL FOR JUMP. JUMP LABEL: %s\n", jumps[currJ]);     \
+                    abort();                                                                                \
+                }                                                                                           \
+            }                                                                                               \
         }
 
         #include "CommandDefines.h"
@@ -191,84 +191,84 @@ char* ConvertIntInBinary(int num)
 }
 char* ConvertStringToCode(String str, int* countCode, int* currentJump)
 {
-    #define DEF_CMD(name, length, number_args, code) \
-    \
-        if (strncmp(str.begin, #name, length) == 0)  \
-        {                                                       \
-            *str.end = '\0';                                        \
-            if (number_args <= 0)                               \
-            {                                               \
-                *countCode = 1;                            \
-                char* res = (char*)calloc(1, 1);            \
-                res[0] = name;                              \
-                return res;                                 \
-            }                                               \
-            else                    \
-            {                               \
-                char* res = (char*)calloc(1 + (sizeof(Element_t) + 1) * number_args, 1);            \
-                int countMove = 0;                                        \
-                int countTotalMove = 0;                                 \
-                *countCode += 1;                                         \
-                res[0] = name;                                             \
-                for (int i = 0; i < number_args; i++)                             \
-                {                                                               \
-                    Element_t temp = {};                                                               \
-                    char* reg = (char*)calloc(64, 1);                                        \
-                    if (sscanf(str.begin + length + countTotalMove, "%lf%n", &temp, &countMove) == 1)          \
-                    {                                                                         \
+    #define DEF_CMD(name, length, number_args, code)                                                        \
+                                                                                                            \
+        if (strncmp(str.begin, #name, length) == 0)                                                         \
+        {                                                                                                   \
+            *str.end = '\0';                                                                                \
+            if (number_args <= 0)                                                                           \
+            {                                                                                               \
+                *countCode = 1;                                                                             \
+                char* res = (char*)calloc(1, 1);                                                            \
+                res[0] = name;                                                                              \
+                return res;                                                                                 \
+            }                                                                                               \
+            else                                                                                            \
+            {                                                                                               \
+                char* res = (char*)calloc(1 + (sizeof(Element_t) + 1) * number_args, 1);                    \
+                int countMove = 0;                                                                          \
+                int countTotalMove = 0;                                                                     \
+                *countCode += 1;                                                                            \
+                res[0] = name;                                                                              \
+                for (int i = 0; i < number_args; i++)                                                       \
+                {                                                                                           \
+                    Element_t temp = {};                                                                    \
+                    char* reg = (char*)calloc(64, 1);                                                       \
+                    if (sscanf(str.begin + length + countTotalMove, "%lf%n", &temp, &countMove) == 1)       \
+                    {                                                                                       \
                         *(res + *countCode) = ARG_ELEMENT_T;                                                \
                         memcpy(res + 2 + i * (sizeof(Element_t) + 1), &temp, sizeof(Element_t));            \
-                        countTotalMove += countMove + 1;\
-                        *countCode += (sizeof(Element_t) + 1); \
-                    }                                                               \
-                    else if (sscanf(str.begin + length + countTotalMove, " %s%n", reg, &countMove) == 1)                \
-                    {                                \
-                        if (name < JUMP && name != LABEL)                                \
-                        {                                               \
-                            Element_t index = (double)(reg[0] - 97);                                              \
-                            if (index < 0 || reg[1] != 'x')                                              \
-                            {                                                                   \
-                                return nullptr;                                                                        \
-                            }                                                                       \
-                            *(res + *countCode) = ARG_REGISTER;                                                \
-                            memcpy(res + 2 + i * (sizeof(Element_t) + 1), &index, sizeof(Element_t));\
-                            countTotalMove += 3;                                            \
-                            *countCode += (sizeof(Element_t) + 1); \
-                        }                                                   \
-                        else if (name == LABEL)                                  \
-                        {                                                   \
-                            *(res + *countCode) = ARG_LABEL_JUMP;                                                \
-                            for (int j = 0; j < sizeof(labelsCount) / sizeof(int); j++)                      \
-                            {                                                                           \
-                                if (strcmp(reg + 1, labels[j]) == 0)                                                \
-                                {                                                                                   \
-                                    return nullptr;                                                                 \
-                                }                                                                                   \
-                            }                                                                                   \
-                            strcpy((res + 2), reg);                                               \
-                            *(res + 2 + strlen(reg) + 1) = '\0';                        \
-                            return res;                                     \
-                            *countCode = 0;                                \
-                        }                                                       \
-                        else if (name >= JUMP)                                  \
-                        {                                             \
-                            *(res + 1) = ARG_LABEL_JUMP;                                            \
-                            memset((res + 2), 0, sizeof(Element_t));                       \
-                            strcpy(jumps[*currentJump], reg);                                              \
-                            *currentJump += 1;                                                          \
-                            *countCode = sizeof(Element_t) + 2;                    \
-                            return res;                                     \
-                        }                                                   \
-                    }                                                                           \
-                    else                                                            \
-                    {                                                               \
-                        return nullptr;                                                         \
-                    }                                                                       \
-                }                                                       \
-                                                             \
-                                                         \
-                return res;                                             \
-            }                                                           \
+                        countTotalMove += countMove + 1;                                                    \
+                        *countCode += (sizeof(Element_t) + 1);                                              \
+                    }                                                                                       \
+                    else if (sscanf(str.begin + length + countTotalMove, " %s%n", reg, &countMove) == 1)    \
+                    {                                                                                       \
+                        if (name < JUMP && name != LABEL)                                                   \
+                        {                                                                                   \
+                            Element_t index = (double)(reg[0] - 97);                                        \
+                            if (index < 0 || reg[1] != 'x')                                                 \
+                            {                                                                               \
+                                return nullptr;                                                             \
+                            }                                                                               \
+                            *(res + *countCode) = ARG_REGISTER;                                             \
+                            memcpy(res + 2 + i * (sizeof(Element_t) + 1), &index, sizeof(Element_t));       \
+                            countTotalMove += 3;                                                            \
+                            *countCode += (sizeof(Element_t) + 1);                                          \
+                        }                                                                                   \
+                        else if (name == LABEL)                                                             \
+                        {                                                                                   \
+                            *(res + *countCode) = ARG_LABEL_JUMP;                                           \
+                            for (int j = 0; j < sizeof(labelsCount) / sizeof(int); j++)                     \
+                            {                                                                               \
+                                if (strcmp(reg + 1, labels[j]) == 0)                                        \
+                                {                                                                           \
+                                    return nullptr;                                                         \
+                                }                                                                           \
+                            }                                                                               \
+                            strcpy((res + 2), reg);                                                         \
+                            *(res + 2 + strlen(reg) + 1) = '\0';                                            \
+                            return res;                                                                     \
+                            *countCode = 0;                                                                 \
+                        }                                                                                   \
+                        else if (name >= JUMP)                                                              \
+                        {                                                                                   \
+                            *(res + 1) = ARG_LABEL_JUMP;                                                    \
+                            memset((res + 2), 0, sizeof(Element_t));                                        \
+                            strcpy(jumps[*currentJump], reg);                                               \
+                            *currentJump += 1;                                                              \
+                            *countCode = sizeof(Element_t) + 2;                                             \
+                            return res;                                                                     \
+                        }                                                                                   \
+                    }                                                                                       \
+                    else                                                                                    \
+                    {                                                                                       \
+                        return nullptr;                                                                     \
+                    }                                                                                       \
+                }                                                                                           \
+                                                                                                            \
+                                                                                                            \
+                return res;                                                                                 \
+            }                                                                                               \
         }
 
     #include "CommandDefines.h"

@@ -14,7 +14,6 @@ DEF_CMD(name, length, args,
         Element_t a = StackPop(stk);                \
         Element_t b = StackPop(stk);                \
         Element_t c = a symbol b;                   \
-        printf("%lf %lf %lf\n", a, b, c);                         \
         StackPush(c, stk);                          \
     }                                               \
     else                                            \
@@ -62,7 +61,6 @@ DEF_CMD(PUSH, 4, 1,
         default:
             fread(&bin, sizeof(Element_t), 1, rf);
             PUSH_ELEM(regs[(int)bin]);
-            printf("reg[%d] = %lf\n", (int)bin, regs[(int)bin]);
             DECREASE_ON_ELEM;
             break;
     }
@@ -137,6 +135,55 @@ DEF_CMD(DUMP, 4, 0,
     StackDump(stk, __LINE__);
 })
 
+DEF_CMD(VIDEO, 5, 1,
+{
+    int point = (int)StackPop(stk);
+    char showing = 0;
+    fread(&showing, 1, 1, rf);
+    *sizeOfBin -= 1;
+    Element_t bin = {};
+    switch (showing)
+    {
+        case 0:
+            fread(&bin, sizeof(Element_t), 1, rf);
+            video[point] = bin;
+            DECREASE_ON_ELEM;
+            break;
+        default:
+            fread(&bin, sizeof(Element_t), 1, rf);
+            video[point] = regs[(int)bin];
+            DECREASE_ON_ELEM;
+            break;
+    }
+})
+/*
+help:
+BLACK 	    0
+RED		    1
+GREEN	    2
+YELLOW	    3
+BLUE	    4
+MAGENTA     5
+CYAN	    6
+WHITE	    7
+*/
+
+DEF_CMD(PAINT, 5, 0,
+{
+    CONSOLE_CLEAR;
+    for (int i = 0; i < sizeScreen; i++)
+    {
+        for (int j = 0; j < sizeScreen; j++)
+        {
+            int point = j + sizeScreen * i;
+            SETCONSOLECOLOR(video[point] + 40);
+            printf("  ");
+        }
+        RESETCOLOR();
+        printf("\n");
+    }
+})
+
 DEF_CMD(SQRT, 4, 0,
 {
     Element_t a = StackPop(stk);
@@ -164,16 +211,6 @@ DEF_CMD(JE, 2, 1,
     JUMP_COND(==);
 })
 
-DEF_CMD(JB, 2, 1,
-{
-    JUMP_COND(>);
-})
-
-DEF_CMD(JS, 2, 1,
-{
-    JUMP_COND(<);
-})
-
 DEF_CMD(JBE, 3, 1,
 {
     JUMP_COND(>=);
@@ -182,6 +219,16 @@ DEF_CMD(JBE, 3, 1,
 DEF_CMD(JSE, 3, 1,
 {
     JUMP_COND(<=);
+})
+
+DEF_CMD(JB, 2, 1,
+{
+    JUMP_COND(>);
+})
+
+DEF_CMD(JS, 2, 1,
+{
+    JUMP_COND(<);
 })
 
 DEF_CMD(CALL, 4, 1,
